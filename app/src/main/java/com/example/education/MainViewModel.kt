@@ -1,7 +1,10 @@
 package com.example.education
 
 import android.content.Context
+import android.util.Log
 import com.example.education.base.BaseViewModel
+import com.example.education.bean.SchoolBean
+import com.example.education.bean.SchoolBeanDao
 import com.example.education.bean.StudentBean
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
@@ -13,8 +16,16 @@ import java.io.InputStream
  * @date 2023/12/6 09:28
  */
 class MainViewModel : BaseViewModel() {
+
+    companion object {
+        private const val TAG = "MainViewModel"
+    }
+
+    // 获取DAO实例
+    private val session: SchoolBeanDao = App.daoSession.schoolBeanDao
+
     /**
-     * 读取Excel数据，获取全部学生信息
+     * 读取学生表Excel数据，获取全部学生信息
      *
      * @return List<StudentBean></StudentBean> */
     fun readExcel(context: Context): List<StudentBean> {
@@ -42,5 +53,32 @@ class MainViewModel : BaseViewModel() {
         // 关闭数据流
         input.close()
         return studentList
+    }
+
+    /**
+     * 删除全部学校数据
+     */
+    fun deleteSchool() {
+        session.deleteAll()
+        Log.d(TAG, "当前学校数据已被清空，学校数据为${session.loadAll().size}")
+    }
+
+    /**
+     * 新增学校数据
+     */
+    fun insertSchool() {
+        session.insert(SchoolBean("第${session.loadAll().size + 1}中学"))
+    }
+
+    /**
+     * 删除全部学校数据
+     */
+    fun querySchool() {
+        val schoolList = session.loadAll()
+        var string = ""
+        for (item in schoolList) {
+            string += "和${item.schoolId}"
+        }
+        Log.d("学校数量", "当前学校数据有${schoolList.size}条，分别是$string")
     }
 }

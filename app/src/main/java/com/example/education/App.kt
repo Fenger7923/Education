@@ -25,6 +25,8 @@ class App: Application() {
     private fun initGreenDao() {
         /**
          * 连接数据库并创建会话
+         *
+         * TODO 待修改数据库名字
          */
         val devOpenHelper: DaoMaster.DevOpenHelper = DaoMaster.DevOpenHelper(this, "aserbao.db")
         val db = devOpenHelper.writableDatabase
